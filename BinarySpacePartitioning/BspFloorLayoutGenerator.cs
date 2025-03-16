@@ -28,7 +28,7 @@ public partial class BspFloorLayoutGenerator: Node
         _randomService.Reset(depth);
         var padding = new Vector2I(_config.FloorBorderPadding, _config.FloorBorderPadding);
         _floorArea = new Area(new Vector2I(padding.X, padding.Y), Size - padding - new Vector2I(1, 1));
-        _bsp = BuildBsp(_floorArea, _config.MinPartitionSize);
+        _bsp = BuildBsp(_floorArea, _config.MinPartitionSize, _config.SplitNoise);
 
         _bsp.SampleRooms(_roomGenerator);
         var rooms = _bsp.Rooms().ToArray();
@@ -51,12 +51,14 @@ public partial class BspFloorLayoutGenerator: Node
     /// Builds a partition tree over the area covering <paramref name="floorArea"/> (which may be a subset of the entire floor)
     /// and uses it to sample rooms.
     /// The partition size is limited by <paramref name="minPartitionSize"/>.
+    /// The <paramref name="splitNoise"/> parameter controls how much the split point can vary.
     /// Increase this to enable larger room samples.
     /// </summary>
     /// <param name="floorArea"></param>
     /// <param name="minPartitionSize"></param>
+    /// <param name="splitNoise"></param>
     /// <returns></returns>
-    private Bsp BuildBsp(Area floorArea, int minPartitionSize)
+    private Bsp BuildBsp(Area floorArea, int minPartitionSize, float splitNoise)
     {
         var root = floorArea;
         var tree = new Bsp(root);
@@ -65,7 +67,7 @@ public partial class BspFloorLayoutGenerator: Node
         while (queue.Count > 0)
         {
             var node = queue.Pop();
-            node.Area.Split(_randomService, minPartitionSize).Execute(split =>
+            node.Area.Split(_randomService, minPartitionSize, splitNoise).Execute(split =>
             {
                 node.Left = new Bsp(split.Item1);
                 node.Right = new Bsp(split.Item2);

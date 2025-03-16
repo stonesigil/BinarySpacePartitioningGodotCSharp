@@ -12,4 +12,5 @@ public partial class Config: Node
     [Export] public int RoomMinSize { get; set; } = 4;
     [Export] public int RoomMinMargin { get; set; } = 1;
     [Export] public int NumLoops { get; set; } = 2;
+    [Export] public float SplitNoise { get; set; } = 0.1f;
 }

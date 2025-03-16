@@ -213,7 +213,7 @@ public class Area
         return [.. possibleSplits];
     }
 
-    internal Maybe<(Area, Area)> Split(RandomService random, int minPartitionSize)
+    internal Maybe<(Area, Area)> Split(RandomService random, int minPartitionSize, float splitNoise)
     {
         var possibleSplits = PossibleSplits(minPartitionSize);
         if (possibleSplits.IsEmpty()) return Maybe.None;
@@ -225,7 +225,7 @@ public class Area
         var size1 = new Vector2I();
         var coord1 = Coord;;
         var mean = Size[splitIndex] / 2;
-        var dev = (int)(Size[splitIndex] * 0.05);
+        var dev = (int)(Size[splitIndex] * splitNoise);
         size1[keepIndex] = Size[keepIndex];
         size1[splitIndex] = random.Next(mean - dev, mean + dev);
 
