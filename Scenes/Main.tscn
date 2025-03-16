@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://bxljfmdxdn418"]
+
+[ext_resource type="Script" path="res://Scenes/Main.cs" id="1_0rahi"]
+[ext_resource type="Texture2D" uid="uid://b214updmdi82l" path="res://Tileset/simple-tileset.png" id="2_cqsok"]
+[ext_resource type="Script" path="res://BinarySpacePartitioning/BspFloorLayoutGenerator.cs" id="3_yli55"]
+[ext_resource type="Script" path="res://Corridors/CorridorGenerator.cs" id="4_gbk33"]
+[ext_resource type="Script" path="res://Rooms/RoomGenerator.cs" id="5_5yrfu"]
+[ext_resource type="Script" path="res://RandomService.cs" id="6_t2b25"]
+[ext_resource type="Script" path="res://Config.cs" id="7_fk2ds"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f6v3l"]
+texture = ExtResource("2_cqsok")
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+1:0/0 = 0
+1:0/0/terrain_set = 0
+1:0/0/terrain = 1
+2:0/0 = 0
+2:0/0/terrain_set = 0
+2:0/0/terrain = 2
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_nk6w4"]
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+terrain_set_0/terrain_1/name = "Terrain 1"
+terrain_set_0/terrain_1/color = Color(0.53108, 0.206828, 0.238347, 1)
+terrain_set_0/terrain_2/name = "Terrain 2"
+terrain_set_0/terrain_2/color = Color(0.236599, 0.444863, 0.267453, 1)
+sources/0 = SubResource("TileSetAtlasSource_f6v3l")
+
+[node name="Main" type="Node" node_paths=PackedStringArray("_bspFloorLayoutGenerator", "_tileMapLayer")]
+script = ExtResource("1_0rahi")
+_bspFloorLayoutGenerator = NodePath("BspFloorLayoutGenerator")
+_tileMapLayer = NodePath("TileMapLayer")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+zoom = Vector2(0.25, 0.25)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_nk6w4")
+
+[node name="BspFloorLayoutGenerator" type="Node" parent="." node_paths=PackedStringArray("_corridorGenerator", "_roomGenerator", "_randomService", "_config")]
+script = ExtResource("3_yli55")
+_corridorGenerator = NodePath("CorridorGenerator")
+_roomGenerator = NodePath("RoomGenerator")
+_randomService = NodePath("../RandomService")
+_config = NodePath("../Config")
+
+[node name="CorridorGenerator" type="Node" parent="BspFloorLayoutGenerator" node_paths=PackedStringArray("_randomService", "_config")]
+script = ExtResource("4_gbk33")
+_randomService = NodePath("../../RandomService")
+_config = NodePath("../../Config")
+
+[node name="RoomGenerator" type="Node" parent="BspFloorLayoutGenerator" node_paths=PackedStringArray("_config", "_randomService")]
+script = ExtResource("5_5yrfu")
+_config = NodePath("../../Config")
+_randomService = NodePath("../../RandomService")
+
+[node name="RandomService" type="Node" parent="."]
+script = ExtResource("6_t2b25")
+_seed = 7
+
+[node name="Config" type="Node" parent="."]
+script = ExtResource("7_fk2ds")
+FloorSize = Vector2i(100, 100)
+MinPartitionSize = 50
+NumLoops = 3
