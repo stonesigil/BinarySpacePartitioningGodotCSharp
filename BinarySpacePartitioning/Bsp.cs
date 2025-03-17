@@ -56,7 +56,6 @@ public class Bsp(Area area) : IEnumerable<Bsp>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerable<Area> Sections() => this.Select(node => node.Area);
     public IEnumerable<Bsp> Leaves() => this.Where(node => node.IsLeaf);
     public IEnumerable<Room> Rooms() => this.Where(node => node._room != null).Select(x => x._room);
     public IEnumerable<ICorridor> Corridors() => this.Where(node => node._corridor != null).Select(x => x._corridor);

@@ -73,6 +73,7 @@ public class FloorGraph
         {
             for (var j = i + 1; j < _rooms.Count; j++)
             {
+                if (i == j) continue;
                 var firstNode = _rooms[i];
                 var secondNode = _rooms[j];
                 var manhattanDistance = ManhattanDistance(firstNode, secondNode);
@@ -84,13 +85,13 @@ public class FloorGraph
 
     /// <summary>
     /// To prevent tons of backtracking for the player we identify leaf nodes that are close
-    /// and add corridors between them.
+    /// geographically but far apart in graph/connectedness sense and add corridors between them.
     /// </summary>
     public ICorridor CorridorToConnectWorstDeadEnd(
-        CorridorGenerator corridorGenerator,
+       CorridorGenerator corridorGenerator,
         OverlapCounter roomOverlapCounter) =>
         ComputeDistancesBetweenDeadEnds()
-            .OrderBy(x => x.ManhattanDistance / x.GraphDistance)
+            .OrderByDescending(x => (float)x.GraphDistance / (2*x.ManhattanDistance)) // / x.GraphDistance)
             .Select(pair => corridorGenerator.New(pair.First, pair.Second, roomOverlapCounter))
             .First();
 
