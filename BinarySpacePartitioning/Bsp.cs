@@ -34,7 +34,7 @@ public class Bsp(Area area) : IEnumerable<Bsp>
         Left.SampleCorridors(corridorGenerator, roomOverlapCounter);
         Right.SampleCorridors(corridorGenerator, roomOverlapCounter);
 
-        var closestPair = ClosestNodes(Left, Right);
+        var closestPair = ClosestRooms(Left, Right);
         _corridor = corridorGenerator.New(closestPair.First._room, closestPair.Second._room, roomOverlapCounter);
     }
 
@@ -92,7 +92,7 @@ public class Bsp(Area area) : IEnumerable<Bsp>
         public int ManhattanDistance => First.ManhattanDistance(Second);
     }
 
-    private static NodePair ClosestNodes(Bsp left, Bsp right)
+    private static NodePair ClosestRooms(Bsp left, Bsp right)
     {
         var initialSolution = new NodePair(left, right);
         return ClosestRoomsWorker(left, right, initialSolution);
