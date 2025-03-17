@@ -88,11 +88,13 @@ public class FloorGraph
     /// geographically but far apart in graph/connectedness sense and add corridors between them.
     /// </summary>
     public ICorridor CorridorToConnectWorstDeadEnd(
-       CorridorGenerator corridorGenerator,
-        OverlapCounter roomOverlapCounter) =>
+        CorridorGenerator corridorGenerator,
+        float graphDistanceWeight,
+        float manhattanDistanceWeight,
+        OverlapCounter overlapCounter) =>
         ComputeDistancesBetweenDeadEnds()
-            .OrderByDescending(x => (float)x.GraphDistance / (2*x.ManhattanDistance)) // / x.GraphDistance)
-            .Select(pair => corridorGenerator.New(pair.First, pair.Second, roomOverlapCounter))
+            .OrderByDescending(x => graphDistanceWeight*x.GraphDistance / (manhattanDistanceWeight*x.ManhattanDistance))
+            .Select(pair => corridorGenerator.New(pair.First, pair.Second, overlapCounter))
             .First();
 
     public record struct NodesWithDistance(int ManhattanDistance, int GraphDistance, Room First, Room Second);

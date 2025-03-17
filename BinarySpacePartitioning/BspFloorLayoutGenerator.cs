@@ -39,7 +39,11 @@ public partial class BspFloorLayoutGenerator: Node
 
         for (var i = 0; i < _config.NumLoops; i++)
         {
-            var extraCorridor = floorGraph.CorridorToConnectWorstDeadEnd(_corridorGenerator, overlapCounter);
+            var extraCorridor = floorGraph.CorridorToConnectWorstDeadEnd(
+                _corridorGenerator,
+                _config.LoopCorridorGraphDistanceWeight,
+                _config.LoopCorridorManhattanDistanceWeight,
+                overlapCounter);
             corridors.Add(extraCorridor);
             floorGraph.AddCorridor(extraCorridor);
         }

@@ -13,4 +13,6 @@ public partial class Config: Node
     [Export] public int RoomMinMargin { get; set; } = 1;
     [Export] public int NumLoops { get; set; } = 2;
     [Export] public float SplitNoise { get; set; } = 0.1f;
+    [Export] public float LoopCorridorManhattanDistanceWeight { get; set; } = 2f;
+    [Export] public float LoopCorridorGraphDistanceWeight { get; set; } = 1f;
 }
