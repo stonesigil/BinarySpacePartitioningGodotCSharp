@@ -19,7 +19,7 @@ public partial class CorridorGenerator: Node
         var overlaps = from.CardinalDirectionsOverlappingAreas(to);
         if (overlaps.IsEmpty) return Maybe<ICorridor>.None;
         
-        // attach the corridor to the correct edge of the `from` area depending on the bend
+        // attach the corridor to the correct edge of the `from` area
         var fromX = overlaps.Direction == Direction.Vertical
             ? overlaps.Overlap1.Center.X
             : from.Center.X < to.Center.X ? from.XMax + 1 : from.XMin - 1;
@@ -31,7 +31,7 @@ public partial class CorridorGenerator: Node
         var fromCoord = new Vector2I(fromX, fromY);
         
         
-        // attach the corridor to the correct edge of the `to` area depending on the bend
+        // attach the corridor to the correct edge of the `to` area
         var toX = overlaps.Direction == Direction.Vertical
             ? overlaps.Overlap2.Center.X
             : to.Center.X < from.Center.X ? to.XMax + 1 : to.XMin - 1;
@@ -90,7 +90,7 @@ public partial class CorridorGenerator: Node
     
     public enum CorridorBend
     {
-        YThenX, // First segment is horizontal, second is vertical
-        XThenY // First segment is vertical, second is horizontal
+        YThenX, // First segment is vertical, second is horizontal
+        XThenY // First segment is horizontal, second is vertical
     }
 }
